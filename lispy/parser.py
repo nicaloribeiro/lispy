@@ -8,6 +8,27 @@ class LispTransformer(InlineTransformer):
     def start(self, *args): 
         return [Symbol.BEGIN, *args]
 
+    def number(self,token):
+        return float(token)
+
+    def list(self,*args):
+        return [Symbol.QUOTE, *args]
+
+    def atom(self,value):
+        if(str(value) == '#t') :
+            return True
+        elif(str(value) == '#f') :
+            return False
+        else :
+            try :
+                return int(value)
+                except ValueError :
+                    try :
+                        return float(value)
+                        except ValueError :
+                            return Symbol(str(value))
+
+
 def parse(src: str):
     """
     Compila string de entrada e retorna a S-expression equivalente.
